@@ -1,2 +1,2 @@
 # coupons-project
-Coupons Project (Part 2)
+Coupons Project Using Spring Framework (Part 2)
