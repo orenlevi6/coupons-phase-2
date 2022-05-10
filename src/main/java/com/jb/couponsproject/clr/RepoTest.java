@@ -32,7 +32,7 @@ public class RepoTest implements CommandLineRunner {
 
         TablePrinter.print(categoryRepo.findAll());
         TablePrinter.print(companyRepo.findAll());
-        TablePrinter.print(customerRepo.findAll()); //Does Not Work - 'failed to lazily initialize'
+//        TablePrinter.print(customerRepo.findAll()); //Does Not Work - 'failed to lazily initialize'
         TablePrinter.print(couponRepo.findAll());
     }
 
