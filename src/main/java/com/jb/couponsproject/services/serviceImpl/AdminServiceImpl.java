@@ -27,10 +27,6 @@ public class AdminServiceImpl extends ClientService implements AdminService {
 
     @Override
     public void updateCompany(Company company) throws NotExistException {
-//        companyRepo.findByIdAndName(company.getId(), company.getName())
-//        .ifPresentOrElse(company1 -> companyRepo.save(company1),
-//                () -> { throw new NotExistException("Company not found");});
-
         if (!companyRepo.existsByIdAndName(company.getId(), company.getName())) {
             throw new NotExistException("Company not found");
         }

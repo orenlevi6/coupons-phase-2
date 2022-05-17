@@ -1,5 +1,6 @@
 package com.jb.couponsproject.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,5 +32,6 @@ public class Customer {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "customers_vs_coupons")
+    @JsonIgnore
     private List<Coupon> coupons;
 }

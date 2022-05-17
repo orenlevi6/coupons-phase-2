@@ -3,6 +3,7 @@ package com.jb.couponsproject.services.serviceImpl;
 import com.jb.couponsproject.beans.Categories;
 import com.jb.couponsproject.beans.Company;
 import com.jb.couponsproject.beans.Coupon;
+import com.jb.couponsproject.exceptions.AlreadyExistsException;
 import com.jb.couponsproject.exceptions.CouponException;
 import com.jb.couponsproject.exceptions.NotExistException;
 import com.jb.couponsproject.services.ClientService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CompanyServiceImpl extends ClientService implements CompanyService {
@@ -30,7 +32,6 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
     @Override
     public void addCoupon(Coupon coupon) {
         coupon.setCompany(getCompanyDetails());
-
         couponRepo.save(coupon);
     }
 
@@ -38,11 +39,15 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
     public void updateCoupon(Coupon coupon) throws NotExistException {
         coupon.setCompany(getCompanyDetails());
 
-        if (!couponRepo.existsById(coupon.getId())) {
-            throw new NotExistException("Coupon ID not found");
+        Optional<Coupon> optionalCoupon = couponRepo.findByIdAndCompany_id(coupon.getId(), this.companyID);
+        if (optionalCoupon.isEmpty()) {
+            throw new NotExistException("Coupon not found");
         }
-
-        couponRepo.save(coupon);
+        if (!optionalCoupon.get().getTitle().equals(coupon.getTitle())) {
+            addCoupon(coupon);
+        } else {
+            couponRepo.save(coupon);
+        }
     }
 
     @Override
@@ -51,17 +56,16 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         if (optionalCoupon.isEmpty()) {
             throw new NotExistException("Coupon ID not found");
         }
-
         if (optionalCoupon.get().getCompany().getId() != this.companyID) {
-            throw new CouponException("Coupon does not match company");
+            throw new CouponException("Coupon does not match this company");
         }
-
+        couponRepo.deleteCouponPurchase(couponID);
         couponRepo.deleteById(couponID);
     }
 
     @Override
     public List<Coupon> getAllCompanyCoupons() throws NotExistException {
-        List<Coupon> companyCoupons = couponRepo.findAllByCompanyId(this.companyID);
+        List<Coupon> companyCoupons = couponRepo.findAllByCompany_id(this.companyID);
         if (companyCoupons.isEmpty()) {
             throw new NotExistException("No coupons found");
         }
@@ -70,20 +74,20 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
 
     @Override
     public List<Coupon> getAllCompanyCoupons(Categories category) throws NotExistException {
-        List<Coupon> companyCoupons = couponRepo.findAllByCompanyIdAndCategoryId(this.companyID, category.getValue());
-        if (companyCoupons.isEmpty()) {
+        List<Coupon> companyCouponsByCategory = couponRepo.findAllByCompany_idAndCategory_id(this.companyID, category.getValue());
+        if (companyCouponsByCategory.isEmpty()) {
             throw new NotExistException("No coupons found");
         }
-        return companyCoupons;
+        return companyCouponsByCategory;
     }
 
     @Override
     public List<Coupon> getAllCompanyCoupons(double maxPrice) throws NotExistException {
-        List<Coupon> companyCoupons = couponRepo.findAllByCompanyIdAndPriceLessThanEqual(this.companyID, maxPrice);
-        if (companyCoupons.isEmpty()) {
-            throw new NotExistException("Mo coupons found");
+        List<Coupon> companyCouponsByMaxPrice = couponRepo.findAllByCompany_idAndPriceLessThanEqual(this.companyID, maxPrice);
+        if (companyCouponsByMaxPrice.isEmpty()) {
+            throw new NotExistException("No coupons found");
         }
-        return companyCoupons;
+        return companyCouponsByMaxPrice;
     }
 
     @Override

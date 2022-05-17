@@ -12,7 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 @Order(2)
 public class AdminTestNoLogin implements CommandLineRunner {
@@ -27,7 +27,7 @@ public class AdminTestNoLogin implements CommandLineRunner {
 
         TablePrinter.print(categoryRepo.findAll());
         TablePrinter.print(adminService.getAllCompanies());
-//        TablePrinter.print(adminService.getAllCustomers()); Does Not Work - 'failed to lazily initialize'
+        TablePrinter.print(adminService.getAllCustomers());
     }
 
     private void addCategories() {

@@ -27,7 +27,7 @@ public class Company {
     @Column(nullable = false, length = 15)
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "company")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "company", orphanRemoval = true)
     @Transient
     @JsonIgnore
     private List<Coupon> coupons;

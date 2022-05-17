@@ -23,5 +23,4 @@ public interface CompanyService {
     List<Coupon> getAllCompanyCoupons(double maxPrice) throws NotExistException;
 
     Company getCompanyDetails();
-
 }
