@@ -2,14 +2,12 @@ package com.jb.couponsproject.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "coupons")
+@Table(name = "coupons", uniqueConstraints = {@UniqueConstraint(columnNames = {"company_id", "title"})})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,13 +20,11 @@ public class Coupon {
 
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Company company;
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
     @Column(nullable = false, length = 30)

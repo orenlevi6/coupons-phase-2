@@ -1,8 +1,6 @@
 package com.jb.couponsproject.beans;
 
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -33,6 +31,5 @@ public class Customer {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "customers_vs_coupons")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Coupon> coupons;
 }
