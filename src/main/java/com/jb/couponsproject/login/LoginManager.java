@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LoginManager {
     private final AdminServiceImpl adminService;
-    private CompanyServiceImpl companyService;
-    private CustomerServiceImpl customerService;
+    private final CompanyServiceImpl companyService;
+    private final CustomerServiceImpl customerService;
 
     public ClientService login(ClientDetails clientDetails) throws LoginException {
         ClientService clientService = null;
