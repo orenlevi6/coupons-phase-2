@@ -27,7 +27,7 @@ public class AdminTestNoLogin implements CommandLineRunner {
 
         TablePrinter.print(categoryRepo.findAll());
         TablePrinter.print(adminService.getAllCompanies());
-        TablePrinter.print(adminService.getAllCustomers());
+//        TablePrinter.print(adminService.getAllCustomers()); //Does Not Work - 'failed to lazily initialize'
     }
 
     private void addCategories() {

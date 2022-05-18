@@ -97,18 +97,17 @@ public class AdminTestLogin implements CommandLineRunner {
                 .build());
 
         System.out.println("Adding customers");
-        TablePrinter.print(admin.getAllCustomers());
+//        TablePrinter.print(admin.getAllCustomers());
 
         System.out.println("Deleting customer");
         admin.deleteCustomer(3);
-        TablePrinter.print(admin.getAllCustomers());
+//        TablePrinter.print(admin.getAllCustomers());
 
         System.out.println("Updating customer");
         Customer customer = admin.getCustomerByID(2);
         customer.setEmail("leas@gmail.com");
         admin.updateCustomer(customer);
-        TablePrinter.print(admin.getAllCustomers());
+//        TablePrinter.print(admin.getAllCustomers());
     }
-
 
 }

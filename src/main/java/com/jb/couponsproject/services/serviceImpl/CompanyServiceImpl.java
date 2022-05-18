@@ -43,11 +43,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         if (optionalCoupon.isEmpty()) {
             throw new NotExistException("Coupon not found");
         }
-        if (!optionalCoupon.get().getTitle().equals(coupon.getTitle())) {
-            addCoupon(coupon);
-        } else {
-            couponRepo.save(coupon);
-        }
+        couponRepo.save(coupon);
     }
 
     @Override
@@ -59,7 +55,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         if (optionalCoupon.get().getCompany().getId() != this.companyID) {
             throw new CouponException("Coupon does not match this company");
         }
-        couponRepo.deleteCouponPurchase(couponID);
+//        couponRepo.deleteCouponPurchase(couponID);
         couponRepo.deleteById(couponID);
     }
 

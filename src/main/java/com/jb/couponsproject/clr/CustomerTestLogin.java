@@ -33,7 +33,7 @@ public class CustomerTestLogin implements CommandLineRunner {
         TablePrinter.print(customerService.getAllCustomerCoupons(50));
 
         System.out.println("Get customer #1 details");
-        TablePrinter.print(customerService.getCustomerDetails());
+//        TablePrinter.print(customerService.getCustomerDetails());
     }
 
 }
