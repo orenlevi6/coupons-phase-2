@@ -37,7 +37,9 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         if (!companyRepo.existsById(companyID)) {
             throw new NotExistException("Company ID not found");
         }
-        companyRepo.deleteById(companyID); //TODO
+        companyRepo.deletePurchasedCouponsByCompanyID(companyID);
+        companyRepo.deleteCompanyCoupons(companyID);
+        companyRepo.deleteById(companyID);
     }
 
     @Override
@@ -76,7 +78,8 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         if (!customerRepo.existsById(customerID)) {
             throw new NotExistException("Customer ID not found");
         }
-        customerRepo.deleteById(customerID); //TODO
+        customerRepo.deleteCouponPurchase(customerID);
+        customerRepo.deleteById(customerID);
     }
 
     @Override
