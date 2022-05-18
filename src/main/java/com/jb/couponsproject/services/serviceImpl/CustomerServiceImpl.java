@@ -7,12 +7,16 @@ import com.jb.couponsproject.exceptions.CouponException;
 import com.jb.couponsproject.exceptions.NotExistException;
 import com.jb.couponsproject.services.ClientService;
 import com.jb.couponsproject.services.serviceDAO.CustomerService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
 public class CustomerServiceImpl extends ClientService implements CustomerService {
     private int customerID;
 
