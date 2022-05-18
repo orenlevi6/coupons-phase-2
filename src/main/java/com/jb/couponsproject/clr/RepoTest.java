@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Date;
 import java.time.LocalDate;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 @Order(1)
 public class RepoTest implements CommandLineRunner {
