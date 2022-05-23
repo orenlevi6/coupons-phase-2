@@ -7,36 +7,45 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 public interface CouponRepo extends JpaRepository<Coupon, Integer> {
 
-    Optional<Coupon> findByIdAndCompany_id(int id, int companyID);
+    boolean existsByIdAndCompanyId(int id, int companyID);
 
-    List<Coupon> findAllByCompany_id(int companyID);
+    List<Coupon> findAllByCompanyId(int companyID);
 
-    List<Coupon> findAllByCompany_idAndCategory_id(int companyID, int categoryID);
+    List<Coupon> findAllByCompanyIdAndCategoryId(int companyID, int categoryID);
 
-    List<Coupon> findAllByCompany_idAndPriceLessThanEqual(int companyID, double maxPrice);
+    List<Coupon> findAllByCompanyIdAndPriceLessThanEqual(int companyID, double maxPrice);
 
-    @Transactional
-    @Modifying
-    @Query(value = "DELETE FROM customers_vs_coupons WHERE coupons_id = ?1", nativeQuery = true)
-    void deleteCouponPurchase(int couponID);
-
-    @Query(value = "SELECT count(*) FROM customers_vs_coupons WHERE customer_id = ?1 and coupons_id = ?2", nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM customers_vs_coupons WHERE customer_id = ?1 AND coupons_id = ?2", nativeQuery = true)
     int countCouponPurchase(int customerID, int couponID);
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO customers_vs_coupons (customer_id, coupons_id) values (?1, ?2)", nativeQuery = true)
+    @Query(value = "DELETE FROM customers_vs_coupons WHERE customer_id <>0 and coupons_id = any " +
+            "(SELECT id FROM coupons WHERE company_id = ?1)", nativeQuery = true)
+    void deleteCompanyCoupons(int companyID);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM customers_vs_coupons WHERE customer_id = ?1", nativeQuery = true)
+    void deleteCouponPurchaseByCustomerID(int customerID);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM customers_vs_coupons WHERE coupons_id = ?1", nativeQuery = true)
+    void deleteCouponPurchaseByCouponID(int couponID);
+
+    @Transactional
+    @Modifying
+    @Query(value = "INSERT INTO customers_vs_coupons (customer_id,coupons_id) VALUES (?1,?2)", nativeQuery = true)
     void addCouponPurchase(int customerID, int couponID);
 
     @Transactional
     @Modifying
     @Query(value = "UPDATE coupons SET amount = amount-1 WHERE id = ?1", nativeQuery = true)
     void decreaseCouponAmount(int couponID);
-
 
     @Query(value = "SELECT * FROM coupons " +
             "INNER JOIN customers_vs_coupons " +
@@ -55,4 +64,15 @@ public interface CouponRepo extends JpaRepository<Coupon, Integer> {
             "ON coupons.id = customers_vs_coupons.coupons_id " +
             "WHERE customers_vs_coupons.customer_id = ?1 AND price <= ?2", nativeQuery = true)
     List<Coupon> findAllCustomerCouponsByMaxPrice(int customerID, double maxPrice);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM coupons WHERE id>0 AND end_date < curdate()", nativeQuery = true)
+    void deleteExpiredCoupons();
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM customers_vs_coupons WHERE coupons_id = any" +
+            " (SELECT id FROM coupons WHERE end_date < curdate())", nativeQuery = true)
+    void deletePurchasedExpiredCoupons();
 }

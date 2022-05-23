@@ -1,12 +1,12 @@
 package com.jb.couponsproject.clr;
 
 import com.jb.couponsproject.beans.Categories;
+import com.jb.couponsproject.beans.ClientDetails;
+import com.jb.couponsproject.beans.ClientType;
 import com.jb.couponsproject.beans.Coupon;
-import com.jb.couponsproject.login.ClientDetails;
-import com.jb.couponsproject.login.ClientType;
-import com.jb.couponsproject.login.LoginManager;
 import com.jb.couponsproject.repositories.CategoryRepo;
 import com.jb.couponsproject.repositories.CouponRepo;
+import com.jb.couponsproject.services.LoginService;
 import com.jb.couponsproject.services.serviceImpl.CompanyServiceImpl;
 import com.jb.couponsproject.utils.TablePrinter;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +19,11 @@ import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
-@Order(4)
-public class CompanyTestLogin implements CommandLineRunner {
+@Order(2)
+public class CompanyTest implements CommandLineRunner {
     private final CategoryRepo categoryRepo;
     private final CouponRepo couponRepo;
-    private final LoginManager loginManager;
+    private final LoginService loginService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -37,7 +37,7 @@ public class CompanyTestLogin implements CommandLineRunner {
     }
 
     private void companyTest1() throws Exception {
-        CompanyServiceImpl company1 = (CompanyServiceImpl) loginManager.login(
+        CompanyServiceImpl company1 = (CompanyServiceImpl) loginService.login(
                 new ClientDetails("no-reply@oren.inc", "orenInc", ClientType.COMPANY));
 
         company1.addCoupon((Coupon.builder()
@@ -68,9 +68,18 @@ public class CompanyTestLogin implements CommandLineRunner {
         TablePrinter.print(company1.getAllCompanyCoupons());
 
         System.out.println("Updating coupon #1");
-        Coupon coupon = couponRepo.findById(1).get();
-        coupon.setTitle("BLAH");
-        company1.updateCoupon(coupon);
+        company1.updateCoupon(Coupon.builder()
+                .id(1)
+//                .company(company1.getCompanyDetails())
+                .category(categoryRepo.getById(1))
+                .title("Mcdonald's")
+                .description("BLAH")
+                .startDate(Date.valueOf(LocalDate.now()))
+                .endDate(Date.valueOf(LocalDate.now().plusDays(7)))
+                .amount(10)
+                .price(19.90)
+                .image("M")
+                .build());
 
         TablePrinter.print(company1.getAllCompanyCoupons());
 
@@ -85,11 +94,12 @@ public class CompanyTestLogin implements CommandLineRunner {
         TablePrinter.print(company1.getAllCompanyCoupons());
 
         System.out.println("Get company #1 details");
-        TablePrinter.print(company1.getCompanyDetails());
+//        TablePrinter.print(company1.getCompanyDetails()); doesn't work - failed to lazily initialize
+        System.out.println(company1.getCompanyDetails() + "\n");
     }
 
     private void companyTest2() throws Exception {
-        CompanyServiceImpl company2 = (CompanyServiceImpl) loginManager.login(
+        CompanyServiceImpl company2 = (CompanyServiceImpl) loginService.login(
                 new ClientDetails("noreply@lea.inc", "leasInc", ClientType.COMPANY));
 
         company2.addCoupon(Coupon.builder()
@@ -122,7 +132,19 @@ public class CompanyTestLogin implements CommandLineRunner {
         System.out.println("Updating coupon #3");
         Coupon coupon = couponRepo.findById(3).get();
         coupon.setTitle("BLAH");
-        company2.updateCoupon(coupon);
+        company2.updateCoupon(Coupon.builder()
+                .id(3)
+//                .company(company2.getCompanyDetails())
+                .category(categoryRepo.getById(1))
+                .title("Food Discount")
+                .description("bla bla")
+                .startDate(Date.valueOf(LocalDate.now()))
+                .endDate(Date.valueOf(LocalDate.now()))
+                .amount(10)
+                .price(39.90)
+                .image("Food")
+                .build());
+
         TablePrinter.print(company2.getAllCompanyCoupons());
 
         System.out.println("Print all company coupons by category - FOOD");
@@ -136,7 +158,8 @@ public class CompanyTestLogin implements CommandLineRunner {
         TablePrinter.print(company2.getAllCompanyCoupons());
 
         System.out.println("Get company #2 details");
-        TablePrinter.print(company2.getCompanyDetails());
+//        TablePrinter.print(company2.getCompanyDetails()); doesn't work - failed to lazily initialize
+        System.out.println(company2.getCompanyDetails() + "\n");
     }
 
 }

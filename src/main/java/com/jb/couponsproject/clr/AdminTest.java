@@ -1,15 +1,9 @@
 package com.jb.couponsproject.clr;
 
-import com.jb.couponsproject.beans.Categories;
-import com.jb.couponsproject.beans.Category;
-import com.jb.couponsproject.beans.Company;
-import com.jb.couponsproject.beans.Customer;
-import com.jb.couponsproject.login.ClientDetails;
-import com.jb.couponsproject.login.ClientType;
-import com.jb.couponsproject.login.LoginManager;
+import com.jb.couponsproject.beans.*;
 import com.jb.couponsproject.repositories.CategoryRepo;
+import com.jb.couponsproject.services.LoginService;
 import com.jb.couponsproject.services.serviceImpl.AdminServiceImpl;
-import com.jb.couponsproject.utils.TablePrinter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -17,17 +11,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Order(3)
-public class AdminTestLogin implements CommandLineRunner {
+@Order(1)
+public class AdminTest implements CommandLineRunner {
+    private final LoginService loginService;
+
     private final CategoryRepo categoryRepo;
-    private final LoginManager loginManager;
 
     @Override
     public void run(String... args) throws Exception {
         addCategories();
 
         System.out.println("Admin Test \n");
-        AdminServiceImpl admin = (AdminServiceImpl) loginManager.login(
+        AdminServiceImpl admin = (AdminServiceImpl) loginService.login(
                 new ClientDetails("admin@admin.com", "admin", ClientType.ADMIN));
 
         companiesTest(admin);
@@ -61,17 +56,27 @@ public class AdminTestLogin implements CommandLineRunner {
                 .build());
 
         System.out.println("Adding companies");
-        TablePrinter.print(admin.getAllCompanies());
+//        TablePrinter.print(admin.getAllCompanies()); doesn't work - failed to lazily initialize
+        admin.getAllCompanies().forEach(System.out::println);
+        System.out.println();
 
         System.out.println("Deleting company");
         admin.deleteCompany(3);
-        TablePrinter.print(admin.getAllCompanies());
+//        TablePrinter.print(admin.getAllCompanies()); doesn't work - failed to lazily initialize
+        admin.getAllCompanies().forEach(System.out::println);
+        System.out.println();
 
         System.out.println("Updating company");
-        Company company = admin.getCompanyByID(2);
-        company.setEmail("noreply@lea.inc");
-        admin.updateCompany(company);
-        TablePrinter.print(admin.getAllCompanies());
+        admin.updateCompany(Company.builder()
+                .id(2)
+                .name("Lea INC")
+                .email("noreply@lea.inc")
+                .password("leasInc")
+                .build());
+
+//        TablePrinter.print(admin.getAllCompanies()); doesn't work - failed to lazily initialize
+        admin.getAllCompanies().forEach(System.out::println);
+        System.out.println();
     }
 
     private void customersTest(AdminServiceImpl admin) throws Exception {
@@ -99,18 +104,26 @@ public class AdminTestLogin implements CommandLineRunner {
         System.out.println("Adding customers");
 //        TablePrinter.print(admin.getAllCustomers()); doesn't work - failed to lazily initialize
         admin.getAllCustomers().forEach(System.out::println);
+        System.out.println();
 
         System.out.println("Deleting customer");
         admin.deleteCustomer(3);
 //        TablePrinter.print(admin.getAllCustomers()); doesn't work - failed to lazily initialize
         admin.getAllCustomers().forEach(System.out::println);
+        System.out.println();
 
         System.out.println("Updating customer");
-        Customer customer = admin.getCustomerByID(2);
-        customer.setEmail("leas@gmail.com");
-        admin.updateCustomer(customer);
+        admin.updateCustomer(Customer.builder()
+                .id(2)
+                .firstName("Lea")
+                .lastName("Sad")
+                .email("leas@gmail.com")
+                .password("leaLea")
+                .build());
+
 //        TablePrinter.print(admin.getAllCustomers()); doesn't work - failed to lazily initialize
         admin.getAllCustomers().forEach(System.out::println);
+        System.out.println();
     }
 
 }

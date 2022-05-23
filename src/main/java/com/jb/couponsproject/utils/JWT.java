@@ -1,12 +1,12 @@
 package com.jb.couponsproject.utils;
 
+import com.jb.couponsproject.beans.ClientDetails;
+import com.jb.couponsproject.beans.ClientType;
 import com.jb.couponsproject.exceptions.LoginException;
 import com.jb.couponsproject.exceptions.TokenException;
-import com.jb.couponsproject.login.ClientDetails;
-import com.jb.couponsproject.login.ClientType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
@@ -17,11 +17,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Service
 public class JWT {
     private final String signatureAlgorithm = SignatureAlgorithm.HS256.getJcaName();
-    private final String encodedSecretKey = "coupons+project+encoded+secret+key+example+oren";
-    private final Key decodedSecretKey = new SecretKeySpec(Base64.getDecoder().decode(this.encodedSecretKey), this.signatureAlgorithm);
+    private final String encodedSecretKey = "coupons+project+encoded+secret+key+oren+lea+tal+omer";
+    private final Key decodedSecretKey =
+            new SecretKeySpec(Base64.getDecoder().decode(this.encodedSecretKey), this.signatureAlgorithm);
 
     public String generateToken(ClientDetails clientDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -31,7 +32,7 @@ public class JWT {
 
     public String generateToken(String token) {
         Map<String, Object> claims = new HashMap<>();
-        Claims myClaims = extractAllClaims(token.replace("Bearer ", ""));
+        Claims myClaims = extractAllClaims(token);
         claims.put("clientType", myClaims.get("clientType"));
         return createToken(claims, myClaims.getSubject());
     }
@@ -53,52 +54,64 @@ public class JWT {
                 .setSigningKey(this.decodedSecretKey)
                 .build();
 
-        return jwtParser.parseClaimsJws(token).getBody();
+        return jwtParser.parseClaimsJws(token.replace("Bearer ", "")).getBody();
+    }
+
+    public String extractSignature(String token) throws ExpiredJwtException, MalformedJwtException {
+        JwtParser jwtParser = Jwts.parserBuilder()
+                .setSigningKey(decodedSecretKey)
+                .build();
+
+        return jwtParser.parseClaimsJws(token).getSignature();
     }
 
     public String extractEmail(String token) {
-        return extractAllClaims(token.replace("Bearer ", "")).getSubject();
+        return extractAllClaims(token).getSubject();
+    }
+
+    public String extractUserType(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("clientType").toString();
     }
 
     public Date extractExpirationDate(String token) {
-        return extractAllClaims(token.replace("Bearer ", "")).getExpiration();
+        return extractAllClaims(token).getExpiration();
+    }
+
+    public boolean isTokenValid(String token) throws MalformedJwtException, SignatureException {
+        final Claims claims = extractAllClaims(token);
+        return true;
     }
 
     public boolean isTokenExpired(String token) {
         try {
-            extractAllClaims(token.replace("Bearer ", ""));
+            extractAllClaims(token);
             return false;
         } catch (ExpiredJwtException err) {
             return true;
         }
     }
 
-    public String getClientType(String token) {
-        Claims claims = extractAllClaims(token.replace("Bearer ", ""));
-        return claims.get("clientType").toString();
-    }
-
     public boolean validateToken(String token, ClientDetails clientDetails) throws MalformedJwtException, SignatureException, ExpiredJwtException {
-        final String userEmail = extractEmail(token.replace("Bearer ", ""));
+        final String userEmail = extractEmail(token);
         return (userEmail.equals(clientDetails.getEmail()) && !isTokenExpired(token));
     }
 
     public boolean validateToken(String token) throws MalformedJwtException, SignatureException {
-        final Claims claims = extractAllClaims(token.replace("Bearer ", ""));
+        final Claims claims = extractAllClaims(token);
         return true;
     }
 
     public void checkUser(String token, ClientType clientType) throws LoginException, TokenException {
-        String newToken = token.replace("Bearer ", "");
-        try {
-            if (validateToken(newToken)) {
-                if (!getClientType(newToken).equals(clientType.toString())) {
-                    throw new LoginException("User not allowed");
-                }
+        if (isTokenValid(token)) {
+            if (!extractUserType(token).equalsIgnoreCase(clientType.toString())) {
+                throw new LoginException(clientType);
             }
-        } catch (MalformedJwtException | SignatureException | ExpiredJwtException err) {
-            throw new TokenException("Invalid Token");
+
+        } else {
+            throw new TokenException();
         }
+
     }
 
 }

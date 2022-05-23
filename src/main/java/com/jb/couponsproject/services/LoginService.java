@@ -1,7 +1,7 @@
-package com.jb.couponsproject.login;
+package com.jb.couponsproject.services;
 
+import com.jb.couponsproject.beans.ClientDetails;
 import com.jb.couponsproject.exceptions.LoginException;
-import com.jb.couponsproject.services.ClientService;
 import com.jb.couponsproject.services.serviceImpl.AdminServiceImpl;
 import com.jb.couponsproject.services.serviceImpl.CompanyServiceImpl;
 import com.jb.couponsproject.services.serviceImpl.CustomerServiceImpl;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LoginManager {
+public class LoginService {
     private final AdminServiceImpl adminService;
     private final CompanyServiceImpl companyService;
     private final CustomerServiceImpl customerService;
@@ -28,10 +28,9 @@ public class LoginManager {
                 clientService = customerService;
         }
         if (clientService.login(clientDetails.getEmail(), clientDetails.getPassword())) {
-            System.out.println("Welcome, " + clientDetails.getClientType().toString());
             return clientService;
         }
-        throw new LoginException("Invalid login, please try again");
+        throw new LoginException(clientDetails.getClientType());
     }
 
 }

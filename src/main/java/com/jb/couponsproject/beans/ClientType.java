@@ -1,4 +1,4 @@
-package com.jb.couponsproject.login;
+package com.jb.couponsproject.beans;
 
 public enum ClientType {
     ADMIN,

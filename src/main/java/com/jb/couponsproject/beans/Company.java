@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
+@ToString
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +28,8 @@ public class Company {
     @Column(nullable = false, length = 15)
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Transient
+    @ToString.Exclude
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "company")
     @JsonIgnore
     private List<Coupon> coupons;
 }
