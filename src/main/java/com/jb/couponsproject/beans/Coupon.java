@@ -8,7 +8,7 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "coupons", uniqueConstraints =
-        {@UniqueConstraint(name = "companyIdAndTitle", columnNames = {"company_id", "title"})})
+        {@UniqueConstraint(columnNames = {"company_id", "title"})})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

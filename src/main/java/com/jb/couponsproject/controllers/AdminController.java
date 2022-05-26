@@ -28,7 +28,7 @@ public class AdminController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt.generateToken(token))
-                .body("Company Added Successfully");
+                .build();
     }
 
     @PutMapping("/updateCompany")
@@ -39,7 +39,7 @@ public class AdminController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt.generateToken(token))
-                .body("Company #" + company.getId() + " updated successfully");
+                .build();
     }
 
     @DeleteMapping("/deleteCompany/{companyID}")
@@ -50,7 +50,7 @@ public class AdminController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt.generateToken(token))
-                .body("Company #" + companyID + " deleted successfully");
+                .build();
     }
 
     @GetMapping("/getAllCompanies")
@@ -79,7 +79,7 @@ public class AdminController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt.generateToken(token))
-                .body("Customer added successfully");
+                .build();
     }
 
     @PutMapping("/updateCustomer")
@@ -90,7 +90,7 @@ public class AdminController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt.generateToken(token))
-                .body("Customer #" + customer.getId() + " updated successfully");
+                .build();
     }
 
     @DeleteMapping("/deleteCustomer/{customerID}")
@@ -102,7 +102,7 @@ public class AdminController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt.generateToken(token))
-                .body("Customer #" + customerID + " updated successfully");
+                .build();
     }
 
     @GetMapping("/getAllCustomers")

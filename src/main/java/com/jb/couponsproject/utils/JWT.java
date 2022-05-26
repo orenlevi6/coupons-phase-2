@@ -78,7 +78,7 @@ public class JWT {
         return extractAllClaims(token).getExpiration();
     }
 
-    public boolean isTokenValid(String token) throws MalformedJwtException, SignatureException {
+    public boolean isTokenValid(String token) throws MalformedJwtException, SignatureException, ExpiredJwtException {
         final Claims claims = extractAllClaims(token);
         return true;
     }

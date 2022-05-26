@@ -17,7 +17,7 @@ public class ExistAdvice {
         return new ErrorDetails("Not Exist Error", err.getMessage());
     }
 
-    @ExceptionHandler(value = AlreadyExistsException.class)
+    @ExceptionHandler(value = {AlreadyExistsException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDetails handleAlreadyExistsException(Exception err) {
         return new ErrorDetails("Already Exists Error", err.getMessage());

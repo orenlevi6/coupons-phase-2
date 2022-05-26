@@ -8,7 +8,6 @@ import com.jb.couponsproject.services.serviceImpl.CompanyServiceImpl;
 import com.jb.couponsproject.services.serviceImpl.CustomerServiceImpl;
 import com.jb.couponsproject.utils.JWT;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +29,9 @@ public class LoginController {
         if (loginService.login(clientDetails) == null) {
             throw new LoginException(clientDetails.getClientType());
         }
-        return new ResponseEntity<>(jwt.generateToken(clientDetails), HttpStatus.OK);
+        return ResponseEntity.ok()
+                .header("Authorization", jwt.generateToken(clientDetails))
+                .build();
     }
 
 }

@@ -18,7 +18,6 @@ public class CouponExpirationDailyJob {
     public void deleteExpiredCoupons() {
         couponRepo.deletePurchasedExpiredCoupons();
         couponRepo.deleteExpiredCoupons();
-        System.out.println("The daily job has finished");
     }
 
 }

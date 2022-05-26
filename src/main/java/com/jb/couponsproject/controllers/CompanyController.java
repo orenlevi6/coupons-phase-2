@@ -38,7 +38,7 @@ public class CompanyController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt.generateToken(token))
-                .body("Coupon #" + coupon.getId() + " updated Successfully");
+                .build();
     }
 
     @DeleteMapping("/deleteCoupon/{couponID}")
@@ -49,7 +49,7 @@ public class CompanyController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt.generateToken(token))
-                .body("Coupon #" + couponID + " deleted Successfully");
+                .build();
     }
 
     @GetMapping("/getAllCompanyCoupons")

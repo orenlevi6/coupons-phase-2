@@ -27,7 +27,7 @@ public class CustomerController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt.generateToken(token))
-                .body("Coupon #" + couponID + " purchased successfully");
+                .build();
     }
 
     @GetMapping("/getCustomerCoupons")
