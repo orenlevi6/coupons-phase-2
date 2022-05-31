@@ -17,7 +17,6 @@ public class AdminTest implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
         System.out.println("Admin Test \n");
         AdminServiceImpl admin = (AdminServiceImpl) loginService.login(
                 new ClientDetails("admin@admin.com", "admin", ClientType.ADMIN));
