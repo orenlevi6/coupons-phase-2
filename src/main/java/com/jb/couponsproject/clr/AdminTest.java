@@ -1,9 +1,9 @@
 package com.jb.couponsproject.clr;
 
 import com.jb.couponsproject.beans.*;
-import com.jb.couponsproject.repositories.CategoryRepo;
 import com.jb.couponsproject.services.LoginService;
 import com.jb.couponsproject.services.serviceImpl.AdminServiceImpl;
+import com.jb.couponsproject.utils.TablePrinter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -11,15 +11,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Order(1)
+@Order(2)
 public class AdminTest implements CommandLineRunner {
     private final LoginService loginService;
 
-    private final CategoryRepo categoryRepo;
-
     @Override
     public void run(String... args) throws Exception {
-        addCategories();
 
         System.out.println("Admin Test \n");
         AdminServiceImpl admin = (AdminServiceImpl) loginService.login(
@@ -27,13 +24,6 @@ public class AdminTest implements CommandLineRunner {
 
         companiesTest(admin);
         customersTest(admin);
-    }
-
-    private void addCategories() {
-        categoryRepo.save(Category.builder().title(Categories.FOOD).build());
-        categoryRepo.save(Category.builder().title(Categories.ELECTRICITY).build());
-        categoryRepo.save(Category.builder().title(Categories.RESTAURANT).build());
-        categoryRepo.save(Category.builder().title(Categories.VACATION).build());
     }
 
     private void companiesTest(AdminServiceImpl admin) throws Exception {

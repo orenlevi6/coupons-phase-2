@@ -19,7 +19,7 @@ import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
-@Order(2)
+@Order(3)
 public class CompanyTest implements CommandLineRunner {
     private final CategoryRepo categoryRepo;
     private final CouponRepo couponRepo;

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Order(3)
+@Order(4)
 public class CustomerTest implements CommandLineRunner {
     private final LoginService loginService;
 
