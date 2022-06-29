@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.jb</groupId>
-    <artifactId>coupons-project</artifactId>
+    <artifactId>coupons-phase-2</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>coupons-project</name>
+    <name>coupons-phase-2</name>
     <description>Coupons Project (Part 2)</description>
     <properties>
         <java.version>11</java.version>
